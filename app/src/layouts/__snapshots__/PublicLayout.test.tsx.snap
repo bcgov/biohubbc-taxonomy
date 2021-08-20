@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PublicLayout renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="MuiBox-root MuiBox-root-1"
+  >
+    <header
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionSticky MuiAppBar-colorPrimary MuiPaper-elevation4"
+      style="box-shadow: none;"
+    >
+      <div
+        class="MuiBox-root MuiBox-root-10 makeStyles-govHeader-2"
+      >
+        <div
+          class="MuiContainer-root makeStyles-govHeaderContainer-3 MuiContainer-maxWidthXl"
+        >
+          <div
+            class="MuiToolbar-root MuiToolbar-regular makeStyles-govHeaderToolbar-4 MuiToolbar-gutters"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-11"
+            >
+              <a
+                aria-label="Go to BioHub Taxonomy Home"
+                class="makeStyles-brand-5"
+                href="/home"
+              >
+                <picture>
+                  <source
+                    media="(min-width: 1200px)"
+                    srcset="gov-bc-logo-horiz.png"
+                  />
+                  <source
+                    media="(min-width: 600px)"
+                    srcset="gov-bc-logo-vert.png"
+                  />
+                  <img
+                    alt="Government of British Columbia"
+                    src="gov-bc-logo-vert.png"
+                  />
+                </picture>
+                BioHub Taxonomy
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root MuiBox-root-12 makeStyles-mainNav-7"
+      >
+        <div
+          class="MuiContainer-root makeStyles-mainNavContainer-8 MuiContainer-maxWidthXl"
+        >
+          <div
+            aria-label="Main Navigation"
+            class="MuiToolbar-root MuiToolbar-dense makeStyles-mainNavToolbar-9 MuiToolbar-gutters"
+            role="navigation"
+          />
+        </div>
+      </div>
+    </header>
+    <main
+      class="MuiBox-root MuiBox-root-13"
+    >
+      <div>
+        <p>
+          The public layout content
+        </p>
+      </div>
+    </main>
+    <footer
+      class="makeStyles-appFooter-14"
+    >
+      <div
+        class="MuiContainer-root makeStyles-appFooterContainer-15 MuiContainer-maxWidthXl"
+      >
+        <div
+          aria-label="Footer"
+          class="MuiToolbar-root MuiToolbar-regular makeStyles-appFooterToolbar-16 MuiToolbar-gutters"
+          role="navigation"
+        >
+          <ul>
+            <li>
+              <a
+                href="https://www.gov.bc.ca/gov/content/home/disclaimer"
+              >
+                Disclaimer
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.gov.bc.ca/gov/content/home/privacy"
+              >
+                Privacy
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.gov.bc.ca/gov/content/home/accessible-government"
+              >
+                Accessibility
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.gov.bc.ca/gov/content/home/copyright"
+              >
+                Copyright
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </div>
+</DocumentFragment>
+`;

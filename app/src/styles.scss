@@ -1,0 +1,83 @@
+@import 'styles/fonts.scss';
+
+body {
+  overflow-y: scroll;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  min-width: 0;
+}
+
+legend {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+legend.MuiFormLabel-root {
+  margin-bottom: 0;
+  float: left;
+  font-weight: 700;
+  letter-spacing: -0.01rem;
+}
+
+.MuiDialogActions-root {
+  button {
+    min-width: 6rem;
+  }
+}
+
+.sectionHeaderButton {
+  & + button {
+    margin-left: 0.5rem;
+  }
+}
+
+.ddInline {
+  dd {
+    position: relative;
+    display: inline-block;
+    &:after {
+      content: ', ';
+      display: inline-block;
+      margin-right: 0.25rem;
+    }
+  }
+
+  dd:last-child {
+    &:after {
+      display: none;
+    }
+  }
+}
+
+.listNoBullets {
+  padding: 0;
+  list-style-type: none;
+}
+
+.buttonWrapper {
+  position: relative;
+}
+
+.buttonProgress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+}
+
+.pageProgress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -20px;
+  margin-top: -20px;
+}
+
+.componentProgress {
+  margin-left: calc(50% - 20px);
+  margin-right: calc(50% - 20px);
+}
