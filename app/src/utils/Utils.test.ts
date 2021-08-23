@@ -1,7 +1,6 @@
+import { DATE_FORMAT } from 'constants/dateTimeFormats';
 import { IConfig } from 'contexts/configContext';
-import {
-    ensureProtocol, getLogOutUrl
-} from './Utils';
+import { ensureProtocol, getFormattedDate, getLogOutUrl } from './Utils';
 
 describe('ensureProtocol', () => {
   it('does nothing if string already has `http://`', async () => {
@@ -32,6 +31,25 @@ describe('ensureProtocol', () => {
     const url = 'someurl.com';
     const urlWithProtocol = ensureProtocol(url, 'http://');
     expect(urlWithProtocol).toEqual(`http://${url}`);
+  });
+});
+
+describe('getFormattedDate', () => {
+  beforeAll(() => {
+    // ignore warning about invalid date string being passed to moment
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  it('returns empty string if invalid date is provided', async () => {
+    const date = '12312312312312312';
+    const formattedDateString = getFormattedDate(DATE_FORMAT.MediumDateFormat, date);
+    expect(formattedDateString).toEqual('');
+  });
+
+  it('returns formatted date string if valid date is provided', async () => {
+    const date = '2021-03-04T22:44:55.478682';
+    const formattedDateString = getFormattedDate(DATE_FORMAT.MediumDateFormat, date);
+    expect(formattedDateString).toEqual('March 4, 2021');
   });
 });
 

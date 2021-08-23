@@ -1,6 +1,8 @@
 import { useKeycloak } from '@react-keycloak/web';
+import { IGetUserResponse } from 'interfaces/useUserApi.interface';
 import { KeycloakInstance } from 'keycloak-js';
 import { useCallback, useEffect, useState } from 'react';
+import { useBiohubApi } from './useBioHubApi';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -50,6 +52,13 @@ export interface IKeycloakWrapper {
    */
   hasSystemRole: (validSystemRoles?: string[]) => boolean;
   /**
+   * True if the user has at least 1 pending access request.
+   *
+   * @type {boolean}
+   * @memberof IKeycloakWrapper
+   */
+  hasAccessRequest: boolean;
+  /**
    * Get out the username portion of the preferred_username from the token.
    *
    * @memberof IKeycloakWrapper
@@ -66,6 +75,14 @@ export interface IKeycloakWrapper {
   email: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;
+  /**
+   * Force this keycloak wrapper to refresh its data.
+   *
+   * Note: currently this only refreshes the `hasAccessRequest` property.
+   *
+   * @memberof IKeycloakWrapper
+   */
+  refresh: () => void;
 }
 
 /**
@@ -77,10 +94,18 @@ export interface IKeycloakWrapper {
 function useKeycloakWrapper(): IKeycloakWrapper {
   const { keycloak } = useKeycloak();
 
+  const biohubApi = useBiohubApi();
+
+  const [bioHubUser, setBioHubUser] = useState<IGetUserResponse>();
+  const [isBioHubUserLoading, setIsBioHubUserLoading] = useState<boolean>(false);
+
   const [keycloakUser, setKeycloakUser] = useState<IUserInfo | null>(null);
   const [isKeycloakUserLoading, setIsKeycloakUserLoading] = useState<boolean>(false);
 
+  const [shouldLoadAccessRequest, setShouldLoadAccessRequest] = useState<boolean>(false);
   const [hasLoadedAllUserInfo, setHasLoadedAllUserInfo] = useState<boolean>(false);
+
+  const [hasAccessRequest, setHasAccessRequest] = useState<boolean>(false);
 
   /**
    * Parses out the username portion of the preferred_username from the token.
@@ -115,10 +140,66 @@ function useKeycloakWrapper(): IKeycloakWrapper {
   }, [keycloakUser]);
 
   useEffect(() => {
+    const getBioHubUser = async () => {
+      let userDetails: IGetUserResponse;
+
+      try {
+        userDetails = await biohubApi.user.getUser();
+      } catch {}
+
+      setBioHubUser(() => {
+        if (userDetails?.role_names?.length) {
+          setHasLoadedAllUserInfo(true);
+        } else {
+          setShouldLoadAccessRequest(true);
+        }
+
+        return userDetails;
+      });
+    };
+
+    if (!keycloak?.authenticated) {
+      return;
+    }
+
+    if (bioHubUser || isBioHubUserLoading) {
+      return;
+    }
+
+    setIsBioHubUserLoading(true);
+
+    getBioHubUser();
+  }, [keycloak, bioHubUser, isBioHubUserLoading, biohubApi.user]);
+
+  useEffect(() => {
+    const getSystemAccessRequest = async () => {
+      let accessRequests: number;
+      
+      try {
+        accessRequests = await biohubApi.admin.hasPendingAdministrativeActivities();
+      } catch {}
+
+      setHasAccessRequest(() => {
+        setHasLoadedAllUserInfo(true);
+        return accessRequests > 0;
+      });
+    };
+
+    if (!keycloak?.authenticated) {
+      return;
+    }
+
+    if (!keycloakUser || !shouldLoadAccessRequest) {
+      return;
+    }
+
+    getSystemAccessRequest();
+  }, [keycloak, biohubApi.admin, getUserIdentifier, hasAccessRequest, keycloakUser, shouldLoadAccessRequest]);
+
+  useEffect(() => {
     const getKeycloakUser = async () => {
       const user = (await keycloak?.loadUserInfo()) as IUserInfo;
       setKeycloakUser(user);
-      setHasLoadedAllUserInfo(true);
     };
 
     if (!keycloak?.authenticated) {
@@ -135,14 +216,22 @@ function useKeycloakWrapper(): IKeycloakWrapper {
   }, [keycloak, keycloakUser, isKeycloakUserLoading]);
 
   const getSystemRoles = (): string[] => {
-    return [];
+    return bioHubUser?.role_names || [];
   };
 
   const hasSystemRole = (validSystemRoles?: string[]) => {
-    console.log('*************************************');
-    console.log(keycloak);
-    console.log('*************************************');
-    return true;
+    if (!validSystemRoles || !validSystemRoles.length) {
+      return true;
+    }
+    const userSystemRoles = getSystemRoles();
+
+    for (const validRole of validSystemRoles) {
+      if (userSystemRoles.includes(validRole)) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   const username = (): string | undefined => {
@@ -165,18 +254,28 @@ function useKeycloakWrapper(): IKeycloakWrapper {
     return keycloakUser?.lastName;
   };
 
+  const refresh = () => {
+    // Set to false to ensure child pages wait for keycloak wrapper to fully re-load
+    setHasLoadedAllUserInfo(false);
+
+    // refresh access requests
+    setShouldLoadAccessRequest(true);
+  };
+
   return {
     keycloak: keycloak,
     hasLoadedAllUserInfo,
     systemRoles: getSystemRoles(),
     hasSystemRole,
+    hasAccessRequest,
     getUserIdentifier,
     getIdentitySource,
     username: username(),
     email: email(),
     displayName: displayName(),
     firstName: firstName(),
-    lastName: lastName()
+    lastName: lastName(),
+    refresh
   };
 }
 

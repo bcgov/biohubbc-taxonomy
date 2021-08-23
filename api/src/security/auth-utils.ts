@@ -1,7 +1,10 @@
 import { decode, GetPublicKeyOrSecret, Secret, verify, VerifyErrors } from 'jsonwebtoken';
 import JwksRsa, { JwksClient } from 'jwks-rsa';
 import { promisify } from 'util';
+import { getDBConnection } from '../database/db';
 import { HTTP401, HTTP403 } from '../errors/CustomError';
+import { UserObject } from '../models/user';
+import { getUserByIdSQL } from '../queries/users/user-queries';
 import { getLogger } from '../utils/logger';
 
 const defaultLog = getLogger('security/auth-utils');
@@ -148,21 +151,69 @@ export const authorize = async function (req: any, scopes: string[]): Promise<tr
     return true;
   }
 
-  console.log('**************************************************');
-  console.log('**************************************************');
-  console.log(req.keycloak_token);
-  console.log('**************************************************');
+  let systemUserWithRoles;
 
-  const hasValidSystemRole = userHasValidSystemRoles(scopes, []);
+  try {
+    systemUserWithRoles = await getSystemUser(req.keycloak_token);
+  } catch {
+    defaultLog.warn({ label: 'authorize', message: 'failed to get system user' });
+    throw new HTTP403('Access Denied');
+  }
+
+  if (!systemUserWithRoles) {
+    defaultLog.warn({ label: 'authorize', message: 'failed to get system user' });
+    throw new HTTP403('Access Denied');
+  }
+
+  const userObject = new UserObject(systemUserWithRoles);
+
+  const hasValidSystemRole = userHasValidSystemRoles(scopes, userObject.role_names);
 
   if (!hasValidSystemRole) {
     defaultLog.warn({ label: 'authorize', message: 'system user does not have any valid system roles' });
     throw new HTTP403('Access Denied');
   }
 
-  req.system_user = null;
+  req.system_user = userObject;
 
   return true;
+};
+
+/**
+ * Finds a single user based on their keycloak token information.
+ *
+ * @param {object} keycloakToken
+ * @return {*}
+ */
+export const getSystemUser = async function (keycloakToken: object) {
+  const connection = getDBConnection(keycloakToken);
+
+  try {
+    await connection.open();
+
+    const systemUserId = connection.systemUserId();
+
+    if (!systemUserId) {
+      return null;
+    }
+
+    const sqlStatement = getUserByIdSQL(systemUserId);
+
+    if (!sqlStatement) {
+      return null;
+    }
+
+    const response = await connection.query(sqlStatement.text, sqlStatement.values);
+
+    await connection.commit();
+
+    return (response && response.rowCount && response.rows[0]) || null;
+  } catch (error) {
+    defaultLog.debug({ label: 'getSystemUser', message: 'error', error });
+    throw error;
+  } finally {
+    connection.release();
+  }
 };
 
 /**

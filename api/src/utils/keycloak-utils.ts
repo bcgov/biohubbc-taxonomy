@@ -17,18 +17,13 @@ export const getUserIdentifier = (keycloakToken: object): string | null => {
 };
 
 /**
- * Parses out the preferred_username identity source (idir, bceid, etc) from the token.
+ * Parses out the preferred_username identity source (idir, etc) from the token.
  *
  * @param {object} keycloakToken
  * @return {*} {SYSTEM_IDENTITY_SOURCE}
  */
 export const getUserIdentitySource = (keycloakToken: object): SYSTEM_IDENTITY_SOURCE => {
   const userIdentitySource = keycloakToken?.['preferred_username']?.split('@')?.[1];
-
-  if (userIdentitySource?.toUpperCase() === SYSTEM_IDENTITY_SOURCE.BCEID) {
-    return SYSTEM_IDENTITY_SOURCE.BCEID;
-  }
-
   if (userIdentitySource?.toUpperCase() === SYSTEM_IDENTITY_SOURCE.IDIR) {
     return SYSTEM_IDENTITY_SOURCE.IDIR;
   }

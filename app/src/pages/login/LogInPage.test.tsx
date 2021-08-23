@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { SYSTEM_ROLE } from 'constants/roles';
-import { AuthStateContext } from 'contexts/authStateContext';
+import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
@@ -10,7 +10,7 @@ const history = createMemoryHistory();
 
 describe('LogInPage', () => {
   it('renders a spinner when user is authenticated and `hasLoadedAllUserInfo` is false', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: true
@@ -29,7 +29,7 @@ describe('LogInPage', () => {
         lastName: 'testlast',
         refresh: () => {}
       }
-    };
+    } as unknown) as IAuthState;
 
     const history = createMemoryHistory();
 
@@ -51,7 +51,7 @@ describe('LogInPage', () => {
   });
 
   it('redirects to `/home` when user is authenticated and has at least 1 system role', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: true
@@ -70,7 +70,7 @@ describe('LogInPage', () => {
         lastName: 'testlast',
         refresh: () => {}
       }
-    };
+    } as unknown) as IAuthState;
 
     const history = createMemoryHistory();
 
@@ -88,7 +88,7 @@ describe('LogInPage', () => {
   });
 
   it('renders correctly when user is not authenticated', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: false
@@ -107,7 +107,7 @@ describe('LogInPage', () => {
         lastName: 'testlast',
         refresh: () => {}
       }
-    };
+    } as unknown) as IAuthState;
 
     const { getByText, getByTestId } = render(
       <AuthStateContext.Provider value={authState}>

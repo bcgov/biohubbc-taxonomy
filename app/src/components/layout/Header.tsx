@@ -152,11 +152,12 @@ const Header: React.FC = () => {
       <Box className={classes.mainNav}>
         <Container maxWidth="xl" className={classes.mainNavContainer}>
           <Toolbar variant="dense" className={classes.mainNavToolbar} role="navigation" aria-label="Main Navigation">
+            <SecureLink to="/home" label="Home" validRoles={[SYSTEM_ROLE.SYSTEM_ADMIN]} id="menu_home" />
             <SecureLink
-              to="/home"
-              label="Home"
+              to="/admin/users"
+              label="Manage Users"
               validRoles={[SYSTEM_ROLE.SYSTEM_ADMIN]}
-              id="menu_home"
+              id="menu_admin_users"
             />
           </Toolbar>
         </Container>

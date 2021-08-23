@@ -24,6 +24,11 @@ const AccessDenied = () => {
     return <CircularProgress className="pageProgress" />;
   }
 
+  if (keycloakWrapper.hasAccessRequest) {
+    // User already has a pending access request
+    return <Redirect to={{ pathname: '/request-submitted' }} />;
+  }
+
   const userHasARole = !!keycloakWrapper?.systemRoles?.length;
 
   return (

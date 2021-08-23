@@ -28,10 +28,14 @@ const LogInPage: React.FC = () => {
       return <CircularProgress className="pageProgress" />;
     }
 
+    if (keycloakWrapper.hasAccessRequest) {
+      // User already has a pending access request
+      return <Redirect to={{ pathname: '/request-submitted' }} />;
+    }
+
     // User has a role
     return <Redirect to={{ pathname: '/home' }} />;
   }
-
   return (
     <Container>
       <Box pt={6} textAlign="center">

@@ -50,7 +50,7 @@ parameters:
     displayName: PostgreSQL Database Name
     name: POSTGRESQL_DATABASE
     required: true
-    value: 'biohubbc-taxonomy'
+    value: 'biohubbc'
   - name: TZ
     description: Database timezone
     required: false
