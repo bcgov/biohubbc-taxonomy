@@ -12,7 +12,7 @@ const systemUsers = [
   { identifier: 'mbaerg', type: 'IDIR', roleId: 1 },
   { identifier: 'nphura', type: 'IDIR', roleId: 1 },
   { identifier: 'opieross', type: 'IDIR', roleId: 1 },
-  { identifier: 'postman', type: 'IDIR', roleId: 2 },
+  { identifier: 'postman', type: 'IDIR', roleId: 1 },
   { identifier: 'robmunro', type: 'IDIR', roleId: 1 },
   { identifier: 'rstens', type: 'IDIR', roleId: 1 },
   { identifier: 'tadekens', type: 'IDIR', roleId: 1 },
