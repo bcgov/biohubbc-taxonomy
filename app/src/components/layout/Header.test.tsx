@@ -1,6 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { SYSTEM_ROLE } from 'constants/roles';
-import { AuthStateContext } from 'contexts/authStateContext';
+import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
@@ -14,7 +14,7 @@ describe('Header', () => {
 
     mockHasSystemRole.mockReturnValueOnce(true); // Return true when the `Home` secure link is parsed
 
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: true
@@ -24,7 +24,7 @@ describe('Header', () => {
         getUserIdentifier: () => 'testuser',
         hasAccessRequest: false,
         hasSystemRole: mockHasSystemRole,
-        getIdentitySource: () => 'bceid',
+        getIdentitySource: () => 'idir',
         username: 'testusername',
         displayName: 'testdisplayname',
         email: 'test@email.com',
@@ -32,7 +32,7 @@ describe('Header', () => {
         lastName: 'testlast',
         refresh: () => {}
       }
-    };
+    } as unknown) as IAuthState;
 
     const { getByText } = render(
       <AuthStateContext.Provider value={authState}>
@@ -46,7 +46,7 @@ describe('Header', () => {
   });
 
   it('renders the username and logout button', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: true
@@ -56,7 +56,7 @@ describe('Header', () => {
         getUserIdentifier: () => 'testuser',
         hasAccessRequest: false,
         hasSystemRole: jest.fn(),
-        getIdentitySource: () => 'bceid',
+        getIdentitySource: () => 'idir',
         username: 'testusername',
         displayName: 'testdisplayname',
         email: 'test@email.com',
@@ -64,7 +64,7 @@ describe('Header', () => {
         lastName: 'testlast',
         refresh: () => {}
       }
-    };
+    } as unknown) as IAuthState;
 
     const { getByTestId, getByText } = render(
       <AuthStateContext.Provider value={authState}>
@@ -76,12 +76,12 @@ describe('Header', () => {
 
     expect(getByTestId('menu_log_out')).toBeVisible();
 
-    expect(getByText('BCEID / TESTUSER')).toBeVisible();
+    expect(getByText('IDIR / TESTUSER')).toBeVisible();
   });
 
   describe('Log Out', () => {
     it('redirects to the `/logout` page', async () => {
-      const authState = {
+      const authState = ({
         keycloakWrapper: {
           keycloak: {
             authenticated: true
@@ -99,7 +99,7 @@ describe('Header', () => {
           lastName: 'testlast',
           refresh: () => {}
         }
-      };
+      } as unknown) as IAuthState;
 
       const { getByTestId } = render(
         <AuthStateContext.Provider value={authState}>

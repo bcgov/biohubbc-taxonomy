@@ -20,10 +20,10 @@ An ordered list of database changes (creates, deletes, alters, etc). The latest 
 
 Useful resource https://devhints.io/knex
 
-To run migrations locally using your terminal, export the required environment variables. For example if an env variable is DB_SCHEMA=biohub-taxonomy
+To run migrations locally using your terminal, export the required environment variables. For example if an env variable is DB_SCHEMA=biohub
 
 ```
-EXPORT DB_SCHEMA=biohub-taxonomy
+EXPORT DB_SCHEMA=biohub
 ```
 To test that it worked:
 

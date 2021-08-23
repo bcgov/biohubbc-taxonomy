@@ -66,12 +66,6 @@ describe('getUserIdentitySource', () => {
     expect(response).to.equal(SYSTEM_IDENTITY_SOURCE.IDIR);
   });
 
-  it('returns non null response when valid keycloakToken provided with bceid source', () => {
-    const response = getUserIdentitySource({ preferred_username: 'username@bceid' });
-
-    expect(response).to.equal(SYSTEM_IDENTITY_SOURCE.BCEID);
-  });
-
   it('returns non null response when valid keycloakToken provided with database source', () => {
     const response = getUserIdentitySource({ preferred_username: 'username@database' });
 

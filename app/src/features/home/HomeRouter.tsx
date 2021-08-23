@@ -18,13 +18,7 @@ interface IHomeRouterProps {
 const HomeRouter: React.FC<IHomeRouterProps> = (props) => {
   return (
     <Switch>
-      <PrivateRoute
-        exact
-        layout={HomeLayout}
-        path="/home"
-        component={HomePage}
-        componentProps={props}
-      />
+      <PrivateRoute exact layout={HomeLayout} path="/home" component={HomePage} componentProps={props} />
       {/*  Catch any unknown routes, and re-direct to the not found page */}
       <AppRoute title="*" path="/home/*" component={() => <Redirect to="/page-not-found" />} />
     </Switch>

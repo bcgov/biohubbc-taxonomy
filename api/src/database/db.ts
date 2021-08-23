@@ -7,7 +7,7 @@ import { getLogger } from '../utils/logger';
 const defaultLog = getLogger('database/db');
 
 const DB_HOST = process.env.DB_HOST;
-const DB_PORT = Number(process.env.DB_PORT);
+const DB_PORT = 5432;
 const DB_USERNAME = process.env.DB_USER_API;
 const DB_PASSWORD = process.env.DB_USER_API_PASS;
 const DB_DATABASE = process.env.DB_DATABASE;

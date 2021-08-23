@@ -4,7 +4,7 @@ let options = require('pipeline-cli').Util.parseArguments();
 // The root config for common values
 const config = require('../../.config/config.json');
 
-const defaultHost = 'biohubbc-af2668-api.apps.silver.devops.gov.bc.ca';
+const defaultHost = 'biohubbc-taxonomy-af2668-api.apps.silver.devops.gov.bc.ca';
 
 const name = (config.module && config.module['api']) || 'biohubbc-taxonomy-api';
 const dbName = (config.module && config.module['db']) || 'biohubbc-taxonomy-db';

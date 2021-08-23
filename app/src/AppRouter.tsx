@@ -1,8 +1,11 @@
 import { SYSTEM_ROLE } from 'constants/roles';
+import AdminRouter from 'features/admin/AdminRouter';
 import HomeRouter from 'features/home/HomeRouter';
 import PublicLayout from 'layouts/PublicLayout';
+import RequestSubmitted from 'pages/200/RequestSubmitted';
 import AccessDenied from 'pages/403/AccessDenied';
 import NotFoundPage from 'pages/404/NotFoundPage';
+import AccessRequestPage from 'pages/access/AccessRequestPage';
 import LogInPage from 'pages/login/LogInPage';
 import LogOutPage from 'pages/logout/LogOutPage';
 import React from 'react';
@@ -31,10 +34,32 @@ const AppRouter: React.FC = (props: any) => {
 
       <AppRoute
         protected
+        path="/access-request"
+        title={getTitle('Access Request')}
+        component={AccessRequestPage}
+        layout={PublicLayout}
+      />
+      <AppRoute
+        protected
+        path="/request-submitted"
+        component={RequestSubmitted}
+        layout={PublicLayout}
+        title={getTitle('Request submitted')}
+      />
+      <AppRoute
+        protected
         path="/home"
         component={HomeRouter}
         layout={PublicLayout}
         title={getTitle('Home')}
+        validRoles={[SYSTEM_ROLE.SYSTEM_ADMIN]}
+      />
+      <AppRoute
+        protected
+        path="/admin"
+        component={AdminRouter}
+        layout={PublicLayout}
+        title={getTitle('Admin')}
         validRoles={[SYSTEM_ROLE.SYSTEM_ADMIN]}
       />
       <AppRoute protected path="/logout" component={LogOutPage} layout={PublicLayout} title={getTitle('Logout')} />

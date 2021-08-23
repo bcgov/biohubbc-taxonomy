@@ -1,15 +1,13 @@
 import { render } from '@testing-library/react';
-import { AuthStateContext } from 'contexts/authStateContext';
+import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import AccessDenied from './AccessDenied';
 
-const history = createMemoryHistory();
-
 describe('AccessDenied', () => {
   it('redirects to `/login` when user is not authenticated', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: false
@@ -26,7 +24,7 @@ describe('AccessDenied', () => {
         firstName: 'testfirst',
         lastName: 'testlast'
       }
-    };
+    } as unknown) as IAuthState;
 
     const history = createMemoryHistory();
 
@@ -44,7 +42,7 @@ describe('AccessDenied', () => {
   });
 
   it('renders a spinner when user is authenticated and `hasLoadedAllUserInfo` is false', () => {
-    const authState = {
+    const authState = ({
       keycloakWrapper: {
         keycloak: {
           authenticated: true
@@ -61,7 +59,7 @@ describe('AccessDenied', () => {
         firstName: 'testfirst',
         lastName: 'testlast'
       }
-    };
+    } as unknown) as IAuthState;
 
     const history = createMemoryHistory();
 
@@ -81,5 +79,4 @@ describe('AccessDenied', () => {
     // renders a spinner
     expect(asFragment()).toMatchSnapshot();
   });
-
 });
